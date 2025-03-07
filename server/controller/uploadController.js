@@ -2,7 +2,7 @@ import { fileURLToPath } from 'url';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
-
+import { notifyCustomerUpdate } from '../server.js'; // ✅ WebSocket 알림 함수 가져오기
 import { db } from '../repository/db.js';
 
 // ES 모듈에서 __dirname 설정
@@ -133,7 +133,8 @@ export const fileUploadMultiple = (req, res) => {
                 message: "파일 및 상품 정보 저장 완료",
                 uploadFileName
             });
-
+            // ✅ 상품 등록 후 WebSocket을 통해 고객 페이지에 업데이트 알림 전송
+            notifyCustomerUpdate();
             console.log("✅ DB 저장 완료:", JSON.stringify(sizeArray));
         } catch (dbError) {
             console.error("❌ DB 저장 실패:", dbError);

@@ -14,6 +14,44 @@ export default function Main() {
         axios.post("http://localhost:9001/admin/customers")
             .then(res => setCustomerData(res.data))
             .catch(err => console.log(err));
+             // ✅ WebSocket 연결
+        // ✅ WebSocket 연결
+        const socket = new WebSocket("ws://localhost:9002");
+
+        socket.onopen = () => {
+            console.log("📡 WebSocket 연결 성공! (관리자 페이지)");
+            socket.send(JSON.stringify({ type: "connect", message: "관리자 페이지 WebSocket 연결됨" }));
+        };
+
+        socket.onmessage = async (event) => {
+            console.log("📩 WebSocket 메시지 수신 (관리자 페이지):", event.data);
+            const data = JSON.parse(event.data);
+        
+            if (data.type === "new_customer") {
+                console.log("📩 새로운 고객이 추가됨! 고객 데이터 다시 불러오기...");
+        
+                try {
+                    const response = await axios.post("http://localhost:9001/admin/customers");
+                    console.log("✅ 관리자 서버에서 받은 응답:", response.data);
+                    setCustomerData(response.data);
+                } catch (error) {
+                    console.error("❌ 관리자 데이터 요청 오류:", error);
+                }
+            }
+        };
+        
+
+        socket.onerror = (error) => {
+            console.error("❌ WebSocket 오류 (관리자 페이지):", error);
+        };
+
+        socket.onclose = () => {
+            console.log("🔌 WebSocket 연결 종료 (관리자 페이지)");
+        };
+
+        return () => {
+            socket.close();
+        };
     }, []);
 
     useEffect(() => {
