@@ -1,0 +1,251 @@
+body {
+  width: 100%;
+  background-color: rgb(242, 244, 250);
+}
+ul {
+  list-style-type: none;
+}
+
+/*****************************
+** Header
+*****************************/
+.adminLogin-header-loggedout,
+.adminLogin-header-loggedin {
+  height: 30px;
+  background-color: white;
+  padding: 30px 50px;
+}
+.header-logo-loggedout {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+.header-logo-loggedout > img {
+  width: 200px;
+  margin: 0;
+}
+.header-logo-loggedout > span,
+.header-logo-loggedin > span {
+  margin-left: 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.adminLogin-header-loggedin {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left-loggedin,
+.header-right-loggedin {
+  margin: 0;
+}
+
+.header-right-loggedin {
+  display: flex;
+  gap: 15px;
+}
+.header-right-loggedin > a{
+  text-decoration: none;
+}
+.header-logo-loggedin {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.header-logo-loggedin > img {
+  width: 200px;
+}
+
+/*****************************
+** AdminLogin
+*****************************/
+.adminLogin-contents-wrap {
+  width: 800px;
+  margin: 80px auto;
+}
+
+.adminLogin-content-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: rgb(39, 39, 39);
+}
+
+.adminLogin-content-box {
+  border-radius: 3px;
+  background-color: #fff;
+  text-align: center;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.adminLogin-form-content1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.adminLogin-form-ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.adminLogin-form-ul > li:first-child {
+  margin-bottom: 20px;
+}
+
+.adminLogin-form-ul > li > input {
+  border: none;
+  border-bottom: 1px solid silver;
+  width: 400px;
+  height: 30px;
+}
+
+.adminLogin-btn {
+  width: 130px;
+  height: 90px;
+  margin-left: 25px;
+  background-color: #000;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.adminLogin-form-content2 {
+  text-align: left;
+  font-size: 0.9rem;
+  color: silver;
+}
+
+.adminLogin-form-errMsg {
+  margin: 0;
+  margin-bottom: 40px;
+  text-align: left;
+  color: red;
+  font-size: 0.8rem;
+}
+
+.adminLogin-form-content3 {
+  border-top: 1px solid silver;
+  margin-top: 30px;
+  padding-top: 15px;
+  text-align: left;
+  color: gray;
+}
+
+.adminLogin-form-content3 > a {
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.adminLogin-form-content3 > a > span:first-child {
+  margin-right: 35px;
+  color: silver;
+}
+
+/*****************************
+** AdminMain
+*****************************/
+.adminMain-container {
+  padding: 30px 0;
+}
+.adminMain-menu-list {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 800px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.adminMain-menu {
+  border: 1px solid #7E00FF;
+  background-color: #fff;
+  color: silver;
+  width: 150px;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.adminMain-menu-select {
+  color: #fff;
+  background-color: #7E00FF;
+  width: 150px;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.adminMain-table {
+  margin: 0 auto;
+}
+.adminMain-table,
+.adminMain-table > tr > th,
+.adminMain-table > tr > td {
+  border: 1px solid #000;
+  border-collapse: collapse;
+}
+
+.adminMain-table > tr > th,
+.adminMain-table > tr > td {
+  padding: 5px;
+  text-align: center;
+}
+
+/*****************************
+** Footer
+*****************************/
+.adminLogin-footer {
+  border-top: 1px solid silver;
+  text-align: left;
+  padding: 30px;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.adminLogin-footer-text {
+  font-size: 0.8rem;
+  margin: 0;
+  color: #000;
+}
+
+.adminLogin-footer-contents1 > p:first-child {
+  font-weight: bold;
+}
+
+.adminLogin-footer-text:nth-child(3) {
+  color: rgb(167, 167, 167);
+}
+
+.adminLogin-footer-text:not(:first-child) {
+  margin-top: 3px;
+}
+
+/*****************************
+** AdminRegiProduct
+*****************************/
+.adminRegiProduct-container {
+  width: 700px;
+  margin: 0 auto;
+}
+/* .adminRegiProduct-form {
+  border: 1px solid red;
+} */
+.adminRegiProduct-form > li {
+  border-bottom: 1px solid silver;
+  padding: 10px 0;
+}
+.adminRegiProduct-form > li:last-child {
+  display: flex;
+}
+.adminRegiProduct-form > li > label {
+  display: inline-block;
+  width: 100px;
+  font-weight: bold;
+}
