@@ -1,5 +1,5 @@
 import * as repository from '../repository/adminRepository.js';
-
+import { notifyOrderUpdate } from "../server.js";
 import jwt from 'jsonwebtoken';
 // import multer from 'multer';
 import fs from 'fs';
@@ -36,7 +36,6 @@ export const getProductData = async(req, res) => {
 /** 관리자 페이지 게스트 정보 호출**/
 export const getGuestsData = async(req, res) => {
     const result = await repository.getGuestsData(req.body);
-    console.log("게스트",result);
     
     res.json(result);
     res.end();
@@ -44,7 +43,6 @@ export const getGuestsData = async(req, res) => {
 /** 관리자 페이지 게스트 정보 호출**/
 export const getOrdersData = async(req, res) => {
     const result = await repository.getOrdersData(req.body);
-    console.log("회원 주문 정보",result);
     
     res.json(result);
     res.end();
@@ -52,8 +50,40 @@ export const getOrdersData = async(req, res) => {
 /** 관리자 페이지 게스트 정보 호출**/
 export const getOrdersGData = async(req, res) => {
     const result = await repository.getOrdersGData(req.body);
-    console.log("게스트 주문 정보",result);
     
     res.json(result);
     res.end();
 }
+
+
+export const updateOrderStatus = async (req, res) => {
+    
+    console.log("📌 [DEBUG] 요청 데이터:", req.body); // 🔍 요청 데이터 출력
+
+    const { oid, status, isGuest } = req.body;
+
+    if (!oid || !status) {
+        console.error("❌ 요청 데이터 누락:", { oid, status, isGuest });
+        return res.status(400).json({ error: "주문 ID와 상태 값이 필요합니다." });
+    }
+    try {
+        let updated;
+        if (isGuest) {
+            updated = await repository.updateGuestOrderStatusDB(oid, status);
+        } else {
+            updated = await repository.updateOrderStatusDB(oid, status);
+        }
+
+        if (updated) {
+            // ✅ 주문 상태 변경 후 WebSocket 메시지 전송
+            notifyOrderUpdate(oid, status);
+
+            res.json({ success: true, message: "주문 상태가 업데이트되었습니다." });
+        } else {
+            res.status(404).json({ error: "주문을 찾을 수 없습니다." });
+        }
+    } catch (error) {
+        console.error("❌ 주문 상태 업데이트 오류:", error);
+        res.status(500).json({ error: "주문 상태 변경 실패" });
+    }
+};

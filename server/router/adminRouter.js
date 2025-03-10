@@ -9,6 +9,7 @@ router
     .post('/products', controller.getProductData)
     .post('/guests', controller.getGuestsData)
     .post('/orders', controller.getOrdersData)
-    .post('/ordersG', controller.getOrdersGData);
+    .post('/ordersG', controller.getOrdersGData)
+    .post("/updateOrderStatus", controller.updateOrderStatus);
 
 export default router;
