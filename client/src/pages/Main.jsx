@@ -10,6 +10,7 @@ export default function Main() {
     const [category, setCategory] = useState('');
     const [isOpen, setIsOpen] = useState(false);
 
+
     useEffect(() => {
         axios.post("http://localhost:9001/admin/customers")
             .then(res => setCustomerData(res.data))
@@ -40,7 +41,6 @@ export default function Main() {
             }
         };
         
-
         socket.onerror = (error) => {
             console.error("❌ WebSocket 오류 (관리자 페이지):", error);
         };
@@ -53,7 +53,33 @@ export default function Main() {
             socket.close();
         };
     }, []);
+    
+    useEffect(() => {
+        fetchOrders();
+        fetchGuestOrders();
 
+        // ✅ WebSocket 연결
+        const socket = new WebSocket("ws://localhost:9002");
+
+        socket.onopen = () => {
+            console.log("📡 WebSocket 연결 성공! (관리자 페이지)");
+        };
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            console.log("📩 WebSocket 메시지 수신 (관리자 페이지):", data);
+
+            if (data.type === "orderUpdate") {
+                console.log(`📦 주문 ${data.oid} 상태가 ${data.status}로 변경됨`);
+                fetchOrders();
+                fetchGuestOrders();
+            }
+        };
+
+        return () => {
+            socket.close();
+        };
+    }, []);
     useEffect(() => {
         axios.post("http://localhost:9001/admin/guests")
             .then(res => setGuestsData(res.data))
@@ -66,15 +92,28 @@ export default function Main() {
             .catch(err => console.log(err));
     }, []);
     useEffect(() => {
-        axios.post("http://localhost:9001/admin/orders")
-            .then(res => setOrderData(res.data))
-            .catch(err => console.log(err));
+        fetchOrders();
+        fetchGuestOrders();
     }, []);
-    useEffect(() => {
-        axios.post("http://localhost:9001/admin/ordersG")
-            .then(res => setOrderGData(res.data))
-            .catch(err => console.log(err));
-    }, []);
+
+    const fetchOrders = async () => {
+        try {
+            const response = await axios.post("http://localhost:9001/admin/orders");
+            setOrderData(response.data);
+        } catch (error) {
+            console.error("❌ 회원 주문 조회 오류:", error);
+        }
+    };
+
+    const fetchGuestOrders = async () => {
+        try {
+            const response = await axios.post("http://localhost:9001/admin/ordersG");
+            setOrderGData(response.data);
+        } catch (error) {
+            console.error("❌ 비회원 주문 조회 오류:", error);
+        }
+    };
+
 
     const clickTab = (name) => {
         if (category === name) {
@@ -82,6 +121,18 @@ export default function Main() {
         } else {
             setCategory(name);
             setIsOpen(true);  // 다른 탭을 누르면 항상 열기
+        }
+    };
+
+     // ✅ 주문 상태 변경 (Pending → Delivered)
+     const updateOrderStatus = async (oid, isGuest = false) => {
+        try {
+            await axios.post("http://localhost:9001/admin/updateOrderStatus", { oid, status: "Delivered", isGuest });
+            alert("주문 상태가 'Delivered'로 변경되었습니다.");
+
+        } catch (error) {
+            console.error("❌ 주문 상태 업데이트 오류:", error);
+            alert("주문 상태 변경에 실패했습니다.");
         }
     };
     return (
@@ -216,6 +267,8 @@ export default function Main() {
                         <th>주문날짜</th>
                         <th>결제수단</th>
                         <th>상태</th>
+                        <th></th>
+
                     </tr>
                     { orderData && orderData.map((list) =>
                         <tr>
@@ -235,6 +288,14 @@ export default function Main() {
                             <td>{list.order_date}</td>
                             <td>{list.payment_method}</td>
                             <td>{list.status}</td>
+                            <td>
+                                    {list.status === "Pending" ? (
+                                        <button onClick={() => updateOrderStatus(list.oid)}>배송 확인</button>
+                                    ) : (
+                                        <span className="delivered-status">배송 완료</span>
+                                    )}
+                                </td>
+
                         </tr>
                     ) }
                 </table>
@@ -259,6 +320,7 @@ export default function Main() {
                         <th>주문날짜</th>
                         <th>결제수단</th>
                         <th>상태</th>
+                        <th></th>
                     </tr>
                     { orderGData && orderGData.map((list) =>
                     <tr>
@@ -278,6 +340,13 @@ export default function Main() {
                         <td>{list.order_date}</td>
                         <td>{list.payment_method}</td>
                         <td>{list.status}</td>
+                        <td>
+                                    {list.status === "Pending" ? (
+                                        <button onClick={() => updateOrderStatus(list.g_oid, true)}>배송 확인</button>
+                                    ) : (
+                                        <span className="delivered-status">배송 완료</span>
+                                    )}
+                                </td>
                     </tr>
                     ) }
                 </table>

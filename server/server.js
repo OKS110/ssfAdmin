@@ -15,9 +15,6 @@ server.use(cors({
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 
-server.use('/admin', adminRouter);
-server.use('/upload', uploadRouter);
-
 // ✅ WebSocket 서버 (포트: 9002)
 const wss = new WebSocketServer({ port: 9002 });
 
@@ -34,6 +31,9 @@ wss.on('connection', (ws) => {
             if (data.type === "new_customer") {
                 console.log("✅ 새로운 고객이 추가됨!");
                 notifyAdminNewCustomer();
+            }else if (data.type === "update_order_status") {
+                console.log(`✅ 주문 상태 변경: ${data.oid} → ${data.status}`);
+                notifyOrderUpdate(data.oid, data.status);
             }
         } catch (error) {
             console.error("❌ WebSocket 메시지 처리 오류:", error);
@@ -41,6 +41,12 @@ wss.on('connection', (ws) => {
     });
 });
 
+
+server.use('/admin', adminRouter);
+server.use('/upload', uploadRouter);
+
+
+// ✅ 신규 고객 추가 시 관리자 페이지에 알림
 export const notifyAdminNewCustomer = () => {
     console.log("📡 WebSocket: 새로운 고객 추가 알림 전송! (관리자 서버)");
 
@@ -52,7 +58,6 @@ export const notifyAdminNewCustomer = () => {
     wss.clients.forEach(client => {
         console.log("📡 WebSocket: 메시지 전송 대상 클라이언트 확인...");
         if (client.readyState === 1) {
-            console.log("📡 WebSocket: 메시지 전송 중... ✅");
             client.send(JSON.stringify({ type: "new_customer" }));
         } else {
             console.log("❌ WebSocket: 클라이언트가 준비되지 않음 (readyState: " + client.readyState + ")");
@@ -70,7 +75,16 @@ export const notifyCustomerUpdate = () => {
     });
 };
 
+// ✅ 주문 상태 변경 시 고객 페이지에 실시간 업데이트
+export const notifyOrderUpdate = (oid, status) => {
+    console.log(`📡 WebSocket: 주문 상태 변경 알림 전송 (oid: ${oid}, status: ${status})`);
 
+    wss.clients.forEach(client => {
+        if (client.readyState === 1) {
+            client.send(JSON.stringify({ type: "orderUpdate", oid, status }));
+        }
+    });
+};
 
 server.listen(port, () => {
     console.log(`관리자 서버 실행 중: http://localhost:${port}`);
