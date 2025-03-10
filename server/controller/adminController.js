@@ -76,7 +76,7 @@ export const updateOrderStatus = async (req, res) => {
 
         if (updated) {
             // ✅ 주문 상태 변경 후 WebSocket 메시지 전송
-            notifyOrderUpdate(oid, status);
+            notifyOrderUpdate(oid, status, isGuest);
 
             res.json({ success: true, message: "주문 상태가 업데이트되었습니다." });
         } else {
