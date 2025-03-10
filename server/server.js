@@ -76,15 +76,21 @@ export const notifyCustomerUpdate = () => {
 };
 
 // ✅ 주문 상태 변경 시 고객 페이지에 실시간 업데이트
-export const notifyOrderUpdate = (oid, status) => {
-    console.log(`📡 WebSocket: 주문 상태 변경 알림 전송 (oid: ${oid}, status: ${status})`);
+export const notifyOrderUpdate = (oid, status, isGuest = false) => {
+    console.log(`📡 WebSocket: 주문 상태 변경 알림 전송 (oid: ${oid}, status: ${status}, isGuest: ${isGuest})`);
 
     wss.clients.forEach(client => {
         if (client.readyState === 1) {
-            client.send(JSON.stringify({ type: "orderUpdate", oid, status }));
+            client.send(JSON.stringify({ 
+                type: "orderUpdate", 
+                oid, 
+                status, 
+                isGuest // ✅ 추가: 비회원 주문인지 여부 전달
+            }));
         }
     });
 };
+
 
 server.listen(port, () => {
     console.log(`관리자 서버 실행 중: http://localhost:${port}`);

@@ -53,7 +53,7 @@ export default function Main() {
             socket.close();
         };
     }, []);
-    
+
     useEffect(() => {
         fetchOrders();
         fetchGuestOrders();
@@ -80,6 +80,7 @@ export default function Main() {
             socket.close();
         };
     }, []);
+    
     useEffect(() => {
         axios.post("http://localhost:9001/admin/guests")
             .then(res => setGuestsData(res.data))
