@@ -7,7 +7,7 @@ export default function RegiProduct() {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [fileNames, setFileNames] = useState({ uploadFileName: [], sourceFileName: [] });
 
-    // ✅ 상품 정보 입력 상태 (초기값 설정)
+    //  상품 정보 입력 상태 (초기값 설정)
     const [category, setCategory] = useState("default");
     const [subCategory, setSubCategory] = useState("");
     const [pname, setPname] = useState("");
@@ -21,12 +21,12 @@ export default function RegiProduct() {
     const [deliveryFee, setDeliveryFee] = useState("free");
     const [description, setDescription] = useState("");
 
-    // ✅ 사이즈 정보 상태 (초기값 - 신발 기준)
+    //  사이즈 정보 상태 (초기값 - 신발 기준)
     const [sizes, setSizes] = useState([
         { name: "", foot_length: "" }
     ]);
 
-    // ✅ 대분류 변경 시 사이즈 초기화 (신발 vs 의류)
+    //  대분류 변경 시 사이즈 초기화 (신발 vs 의류)
     const handleCategoryChange = (e) => {
         const selectedCategory = e.target.value;
         setCategory(selectedCategory);
@@ -38,7 +38,7 @@ export default function RegiProduct() {
         }
     };
 
-    // ✅ 사이즈 추가
+    //  사이즈 추가
     const addSize = () => {
         if (category === "shoes") {
             setSizes([...sizes, { name: "", foot_length: "" }]);
@@ -47,19 +47,19 @@ export default function RegiProduct() {
         }
     };
 
-    // ✅ 사이즈 삭제
+    //  사이즈 삭제
     const removeSize = (index) => {
         setSizes(sizes.filter((_, i) => i !== index));
     };
 
-    // ✅ 사이즈 변경 핸들러
+    //  사이즈 변경 핸들러
     const handleSizeChange = (index, field, value) => {
         const updatedSizes = [...sizes];
         updatedSizes[index][field] = value;
         setSizes(updatedSizes);
     };
 
-    // ✅ 파일 선택 핸들러
+    //  파일 선택 핸들러
     const handleFileSelect = (e) => {
         const files = Array.from(e.target.files);
         if (files.length === 0) {
@@ -69,7 +69,7 @@ export default function RegiProduct() {
         setSelectedFiles(files);
     };
 
-    // ✅ 상품 등록 및 파일 업로드 핸들러
+    //  상품 등록 및 파일 업로드 핸들러
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -84,7 +84,7 @@ export default function RegiProduct() {
             return;
         }
 
-        // ✅ FormData 생성
+        //  FormData 생성
         const formData = new FormData();
         formData.append("category", category);
         formData.append("sub_category", subCategory);
@@ -100,7 +100,7 @@ export default function RegiProduct() {
         formData.append("delivery_fee", deliveryFee || "free");
         formData.append("description", description || "상품 설명 없음");
 
-        // ✅ 파일 추가
+        //  파일 추가
         selectedFiles.forEach((file) => formData.append("files", file));
 
         try {
@@ -108,11 +108,11 @@ export default function RegiProduct() {
                 headers: { "Content-Type": "multipart/form-data" }
             });
 
-            console.log("✅ 업로드 완료:", response.data);
+            console.log(" 업로드 완료:", response.data);
             setFileNames(response.data);
             alert("상품 및 파일 업로드 완료!");
         } catch (error) {
-            console.error("🚨 업로드 실패:", error);
+            console.error("업로드 실패:", error);
             alert("업로드 실패. 다시 시도해주세요.");
         }
     };
@@ -144,7 +144,7 @@ export default function RegiProduct() {
                         <Form.Label>색상</Form.Label>
                         <Form.Control type="text" value={color} onChange={(e) => setColor(e.target.value)} placeholder="예: red, blue, black" />
                     </li>
-                    {/* ✅ 사이즈 입력 필드 (대분류에 따라 다르게 표시) */}
+                    {/*  사이즈 입력 필드 (대분류에 따라 다르게 표시) */}
                     <li>
                         <Form.Label>사이즈 정보</Form.Label>
                         {sizes.map((size, index) => (

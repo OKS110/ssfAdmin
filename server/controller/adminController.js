@@ -58,12 +58,12 @@ export const getOrdersGData = async(req, res) => {
 
 export const updateOrderStatus = async (req, res) => {
     
-    console.log("📌 [DEBUG] 요청 데이터:", req.body); // 🔍 요청 데이터 출력
+    console.log("[DEBUG] 요청 데이터:", req.body); // 🔍 요청 데이터 출력
 
     const { oid, status, isGuest } = req.body;
 
     if (!oid || !status) {
-        console.error("❌ 요청 데이터 누락:", { oid, status, isGuest });
+        console.error("요청 데이터 누락:", { oid, status, isGuest });
         return res.status(400).json({ error: "주문 ID와 상태 값이 필요합니다." });
     }
     try {
@@ -75,7 +75,7 @@ export const updateOrderStatus = async (req, res) => {
         }
 
         if (updated) {
-            // ✅ 주문 상태 변경 후 WebSocket 메시지 전송
+            //  주문 상태 변경 후 WebSocket 메시지 전송
             notifyOrderUpdate(oid, status, isGuest);
 
             res.json({ success: true, message: "주문 상태가 업데이트되었습니다." });
@@ -83,7 +83,7 @@ export const updateOrderStatus = async (req, res) => {
             res.status(404).json({ error: "주문을 찾을 수 없습니다." });
         }
     } catch (error) {
-        console.error("❌ 주문 상태 업데이트 오류:", error);
+        console.error(" 주문 상태 업데이트 오류:", error);
         res.status(500).json({ error: "주문 상태 변경 실패" });
     }
 };

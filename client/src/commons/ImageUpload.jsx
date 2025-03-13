@@ -18,7 +18,7 @@ export default function ImageUpload({ getFileName }) {
     const [deliveryFee, setDeliveryFee] = useState("free");
     const [description, setDescription] = useState("");
 
-    // ✅ 파일 선택 핸들러
+    //  파일 선택 핸들러
     const handleFileSelect = (e) => {
         const files = Array.from(e.target.files);
         if (files.length === 0) {
@@ -28,14 +28,14 @@ export default function ImageUpload({ getFileName }) {
         setSelectedFiles(files);
     };
 
-    // ✅ 파일 업로드 및 상품 데이터 전송
+    //  파일 업로드 및 상품 데이터 전송
     const handleFileUploadMultiple = async () => {
         if (selectedFiles.length === 0) {
             alert("파일을 선택해주세요!");
             return;
         }
 
-        // ✅ FormData 생성
+        //  FormData 생성
         const formData = new FormData();
         formData.append("category", category);
         formData.append("sub_category", subCategory);
@@ -50,7 +50,7 @@ export default function ImageUpload({ getFileName }) {
         formData.append("delivery_fee", deliveryFee);
         formData.append("description", description);
 
-        // ✅ 파일 추가
+        //  파일 추가
         selectedFiles.forEach((file) => formData.append("files", file));
 
         try {
@@ -58,7 +58,7 @@ export default function ImageUpload({ getFileName }) {
                 headers: { "Content-Type": "multipart/form-data" }
             });
 
-            console.log("✅ 업로드 완료:", response.data);
+            console.log(" 업로드 완료:", response.data);
             getFileName(response.data);
             alert("상품 및 파일 업로드 완료!");
         } catch (error) {
