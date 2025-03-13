@@ -15,8 +15,8 @@ export default function Main() {
         axios.post("http://localhost:9001/admin/customers")
             .then(res => setCustomerData(res.data))
             .catch(err => console.log(err));
-             // ✅ WebSocket 연결
-        // ✅ WebSocket 연결
+             //  WebSocket 연결
+        //  WebSocket 연결
         const socket = new WebSocket("ws://localhost:9002");
 
         socket.onopen = () => {
@@ -33,16 +33,16 @@ export default function Main() {
         
                 try {
                     const response = await axios.post("http://localhost:9001/admin/customers");
-                    console.log("✅ 관리자 서버에서 받은 응답:", response.data);
+                    console.log(" 관리자 서버에서 받은 응답:", response.data);
                     setCustomerData(response.data);
                 } catch (error) {
-                    console.error("❌ 관리자 데이터 요청 오류:", error);
+                    console.error("ERROR 관리자 데이터 요청 오류:", error);
                 }
             }
         };
         
         socket.onerror = (error) => {
-            console.error("❌ WebSocket 오류 (관리자 페이지):", error);
+            console.error("ERROR WebSocket 오류 (관리자 페이지):", error);
         };
 
         socket.onclose = () => {
@@ -58,7 +58,7 @@ export default function Main() {
         fetchOrders();
         fetchGuestOrders();
 
-        // ✅ WebSocket 연결
+        //  WebSocket 연결
         const socket = new WebSocket("ws://localhost:9002");
 
         socket.onopen = () => {
@@ -102,7 +102,7 @@ export default function Main() {
             const response = await axios.post("http://localhost:9001/admin/orders");
             setOrderData(response.data);
         } catch (error) {
-            console.error("❌ 회원 주문 조회 오류:", error);
+            console.error("ERROR 회원 주문 조회 오류:", error);
         }
     };
 
@@ -111,7 +111,7 @@ export default function Main() {
             const response = await axios.post("http://localhost:9001/admin/ordersG");
             setOrderGData(response.data);
         } catch (error) {
-            console.error("❌ 비회원 주문 조회 오류:", error);
+            console.error("ERROR 비회원 주문 조회 오류:", error);
         }
     };
 
@@ -125,14 +125,14 @@ export default function Main() {
         }
     };
 
-     // ✅ 주문 상태 변경 (Pending → Delivered)
+     //  주문 상태 변경 (Pending → Delivered)
      const updateOrderStatus = async (oid, isGuest = false) => {
         try {
             await axios.post("http://localhost:9001/admin/updateOrderStatus", { oid, status: "Delivered", isGuest });
             alert("주문 상태가 'Delivered'로 변경되었습니다.");
 
         } catch (error) {
-            console.error("❌ 주문 상태 업데이트 오류:", error);
+            console.error("ERROR 주문 상태 업데이트 오류:", error);
             alert("주문 상태 변경에 실패했습니다.");
         }
     };
