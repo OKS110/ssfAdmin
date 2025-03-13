@@ -109,7 +109,7 @@ export const getOrdersGData = async() => {
     return result;
 }
 
-// ✅ 회원 주문 상태 업데이트
+//  회원 주문 상태 업데이트
 export const updateOrderStatusDB = async (oid, status) => {
     const sql = `UPDATE orders SET status = ? WHERE oid = ?`;
 
@@ -117,12 +117,12 @@ export const updateOrderStatusDB = async (oid, status) => {
         const [result] = await db.execute(sql, [status, oid]);
         return result.affectedRows > 0;
     } catch (error) {
-        console.error("❌ 회원 주문 상태 업데이트 오류:", error);
+        console.error("ERROR 회원 주문 상태 업데이트 오류:", error);
         throw error;
     }
 };
 
-// ✅ 비회원 주문 상태 업데이트
+//  비회원 주문 상태 업데이트
 export const updateGuestOrderStatusDB = async (g_oid, status) => {
     const sql = `UPDATE guest_orders SET status = ? WHERE g_oid = ?`;
 
@@ -130,7 +130,7 @@ export const updateGuestOrderStatusDB = async (g_oid, status) => {
         const [result] = await db.execute(sql, [status, g_oid]);
         return result.affectedRows > 0;
     } catch (error) {
-        console.error("❌ 비회원 주문 상태 업데이트 오류:", error);
+        console.error("ERROR 비회원 주문 상태 업데이트 오류:", error);
         throw error;
     }
 };

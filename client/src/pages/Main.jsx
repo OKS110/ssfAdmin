@@ -20,16 +20,16 @@ export default function Main() {
         const socket = new WebSocket("ws://localhost:9002");
 
         socket.onopen = () => {
-            console.log("📡 WebSocket 연결 성공! (관리자 페이지)");
+            console.log(" WebSocket 연결 성공! (관리자 페이지)");
             socket.send(JSON.stringify({ type: "connect", message: "관리자 페이지 WebSocket 연결됨" }));
         };
 
         socket.onmessage = async (event) => {
-            console.log("📩 WebSocket 메시지 수신 (관리자 페이지):", event.data);
+            console.log(" WebSocket 메시지 수신 (관리자 페이지):", event.data);
             const data = JSON.parse(event.data);
         
             if (data.type === "new_customer") {
-                console.log("📩 새로운 고객이 추가됨! 고객 데이터 다시 불러오기...");
+                console.log(" 새로운 고객이 추가됨! 고객 데이터 다시 불러오기...");
         
                 try {
                     const response = await axios.post("http://localhost:9001/admin/customers");
@@ -62,15 +62,15 @@ export default function Main() {
         const socket = new WebSocket("ws://localhost:9002");
 
         socket.onopen = () => {
-            console.log("📡 WebSocket 연결 성공! (관리자 페이지)");
+            console.log(" WebSocket 연결 성공! (관리자 페이지)");
         };
 
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            console.log("📩 WebSocket 메시지 수신 (관리자 페이지):", data);
+            console.log(" WebSocket 메시지 수신 (관리자 페이지):", data);
 
             if (data.type === "orderUpdate") {
-                console.log(`📦 주문 ${data.oid} 상태가 ${data.status}로 변경됨`);
+                console.log(` 주문 ${data.oid} 상태가 ${data.status}로 변경됨`);
                 fetchOrders();
                 fetchGuestOrders();
             }

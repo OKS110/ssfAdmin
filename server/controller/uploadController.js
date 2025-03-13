@@ -2,18 +2,18 @@ import { fileURLToPath } from 'url';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
-import { notifyCustomerUpdate } from '../server.js'; // ✅ WebSocket 알림 함수 가져오기
+import { notifyCustomerUpdate } from '../server.js'; //  WebSocket 알림 함수 가져오기
 import { db } from '../repository/db.js';
 
 // ES 모듈에서 __dirname 설정
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// 📌 업로드 폴더 설정
+// 업로드 폴더 설정
 const uploadDir = path.join(__dirname, 'upload_files');
 console.log("📁 업로드 폴더 경로: ", uploadDir);
 
-// 📌 Multer 설정
+// Multer 설정
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         const uploadPath = path.join(__dirname, '..', 'upload_files'); // 🔹 루트 폴더에 업로드 경로 지정
@@ -36,13 +36,13 @@ const upload = multer({
 }).array("files", 9); // 최대 9개 파일 업로드
 
 
-// ✅ 상품 등록 후 고객 페이지에 데이터 변경 알림
+//  상품 등록 후 고객 페이지에 데이터 변경 알림
 export const notifyCustomerServer = async () => {
     try {
         await axios.post('http://localhost:9000/product/update'); // 고객 서버에 변경 요청
-        console.log("✅ 고객 서버에 상품 업데이트 알림 완료");
+        console.log(" 고객 서버에 상품 업데이트 알림 완료");
     } catch (error) {
-        console.error("🚨 고객 서버 업데이트 알림 실패:", error);
+        console.error("ERROR 고객 서버 업데이트 알림 실패:", error);
     }
 };
 
@@ -50,20 +50,20 @@ export const notifyCustomerServer = async () => {
 export const fileUploadMultiple = (req, res) => {
     upload(req, res, async (err) => {
         if (err) {
-            console.error("🚨 파일 업로드 중 오류 발생:", err);
+            console.error("ERROR 파일 업로드 중 오류 발생:", err);
             return res.status(500).json({ message: "파일 업로드 실패", error: err.message });
         }
 
-        // ✅ 요청 데이터 추출
+        //  요청 데이터 추출
         const { category, sub_category, name, color, size, original_price, star, stock, discount_rate, discounted_price, brand, delivery_fee, description } = req.body;
-        console.log("📌 요청 데이터:", req.body);
+        console.log("요청 데이터:", req.body);
 
         if (!category || !sub_category || !name || !color || !size || !original_price) {
             return res.status(400).json({ message: "필수 입력 값이 누락되었습니다." });
         }
 
         try {
-            // ✅ color JSON 변환 (오류 방지)
+            //  color JSON 변환 (오류 방지)
             let colorArray;
             try {
                 colorArray = JSON.parse(color);
@@ -71,12 +71,12 @@ export const fileUploadMultiple = (req, res) => {
                 colorArray = []; // JSON 파싱 오류 시 기본값 설정
             }
 
-            // ✅ size JSON 변환 (대분류에 따라 변환 방식 다름)
+            //  size JSON 변환 (대분류에 따라 변환 방식 다름)
             let sizeArray;
             try {
                 sizeArray = JSON.parse(size);
 
-                // 📌 대분류(category)에 따라 사이즈 데이터 가공
+                //  대분류(category)에 따라 사이즈 데이터 가공
                 if (category === "shoes") {
                     // 신발: `{ name: "230", foot_length: 230 }`
                     sizeArray = sizeArray.map(item => ({
@@ -96,15 +96,15 @@ export const fileUploadMultiple = (req, res) => {
                 sizeArray = []; // JSON 파싱 오류 시 기본값 설정
             }
 
-            // ✅ 업로드된 파일 정보 저장
+            //  업로드된 파일 정보 저장
             let uploadFileName = [];
             for (const file of req.files) {
                 uploadFileName.push(file.path);
             }
 
-            console.log("✅ 업로드된 파일 경로:", uploadFileName);
+            console.log(" 업로드된 파일 경로:", uploadFileName);
 
-            // ✅ 상품 정보 DB 저장
+            //  상품 정보 DB 저장
             const insertQuery = `
                 INSERT INTO products (category, sub_category, name, color, size, original_price, image, star,
                  stock, discount_rate, discounted_price, brand, delivery_fee, description)
@@ -133,11 +133,11 @@ export const fileUploadMultiple = (req, res) => {
                 message: "파일 및 상품 정보 저장 완료",
                 uploadFileName
             });
-            // ✅ 상품 등록 후 WebSocket을 통해 고객 페이지에 업데이트 알림 전송
+            //  상품 등록 후 WebSocket을 통해 고객 페이지에 업데이트 알림 전송
             notifyCustomerUpdate();
-            console.log("✅ DB 저장 완료:", JSON.stringify(sizeArray));
+            console.log(" DB 저장 완료:", JSON.stringify(sizeArray));
         } catch (dbError) {
-            console.error("❌ DB 저장 실패:", dbError);
+            console.error("ERROR DB 저장 실패:", dbError);
             res.status(500).json({ message: "DB 저장 실패", error: dbError.message });
         }
     });
