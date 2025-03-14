@@ -9,7 +9,6 @@ export default function Login() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
   const initForm = { 'id': '', 'pwd': '' };
-  const initErr = { 'id': '', 'pwd': '', 'err': '' };
   const refs = {
     idRef: useRef(null),
     pwdRef: useRef(null)
