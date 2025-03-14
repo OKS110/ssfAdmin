@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 
 // 업로드 폴더 설정
 const uploadDir = path.join(__dirname, 'upload_files');
-console.log("📁 업로드 폴더 경로: ", uploadDir);
+console.log(" 업로드 폴더 경로: ", uploadDir);
 
 // Multer 설정
 const storage = multer.diskStorage({
@@ -99,7 +99,7 @@ export const fileUploadMultiple = (req, res) => {
             //  업로드된 파일 정보 저장
             let uploadFileName = [];
             for (const file of req.files) {
-                uploadFileName.push(file.path);
+                uploadFileName.push(`http://localhost:9001/uploads/${file.filename}`);
             }
 
             console.log(" 업로드된 파일 경로:", uploadFileName);
@@ -135,6 +135,7 @@ export const fileUploadMultiple = (req, res) => {
             });
             //  상품 등록 후 WebSocket을 통해 고객 페이지에 업데이트 알림 전송
             notifyCustomerUpdate();
+
             console.log(" DB 저장 완료:", JSON.stringify(sizeArray));
         } catch (dbError) {
             console.error("ERROR DB 저장 실패:", dbError);

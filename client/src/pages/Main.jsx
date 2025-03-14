@@ -10,131 +10,72 @@ export default function Main() {
     const [category, setCategory] = useState('');
     const [isOpen, setIsOpen] = useState(false);
 
+    /**  API 호출을 한 번에 처리하는 함수 */
+    const fetchData = async () => {
+        try {
+            const [customers, guests, products, orders, ordersG] = await Promise.all([
+                axios.post("http://localhost:9001/admin/customers"),
+                axios.post("http://localhost:9001/admin/guests"),
+                axios.post("http://localhost:9001/admin/products"),
+                axios.post("http://localhost:9001/admin/orders"),
+                axios.post("http://localhost:9001/admin/ordersG")
+            ]);
 
+            setCustomerData(customers.data);
+            setGuestsData(guests.data);
+            setProductData(products.data);
+            setOrderData(orders.data);
+            setOrderGData(ordersG.data);
+        } catch (error) {
+            console.error("데이터 가져오기 오류:", error);
+        }
+    };
+
+    /**  WebSocket 연결 설정 */
     useEffect(() => {
-        axios.post("http://localhost:9001/admin/customers")
-            .then(res => setCustomerData(res.data))
-            .catch(err => console.log(err));
-             //  WebSocket 연결
-        //  WebSocket 연결
+        fetchData(); // 처음 한 번 데이터 가져오기
+
         const socket = new WebSocket("ws://localhost:9002");
 
         socket.onopen = () => {
-            console.log(" WebSocket 연결 성공! (관리자 페이지)");
-            socket.send(JSON.stringify({ type: "connect", message: "관리자 페이지 WebSocket 연결됨" }));
-        };
-
-        socket.onmessage = async (event) => {
-            console.log(" WebSocket 메시지 수신 (관리자 페이지):", event.data);
-            const data = JSON.parse(event.data);
-        
-            if (data.type === "new_customer") {
-                console.log(" 새로운 고객이 추가됨! 고객 데이터 다시 불러오기...");
-        
-                try {
-                    const response = await axios.post("http://localhost:9001/admin/customers");
-                    console.log(" 관리자 서버에서 받은 응답:", response.data);
-                    setCustomerData(response.data);
-                } catch (error) {
-                    console.error("ERROR 관리자 데이터 요청 오류:", error);
-                }
-            }
-        };
-        
-        socket.onerror = (error) => {
-            console.error("ERROR WebSocket 오류 (관리자 페이지):", error);
-        };
-
-        socket.onclose = () => {
-            console.log("🔌 WebSocket 연결 종료 (관리자 페이지)");
-        };
-
-        return () => {
-            socket.close();
-        };
-    }, []);
-
-    useEffect(() => {
-        fetchOrders();
-        fetchGuestOrders();
-
-        //  WebSocket 연결
-        const socket = new WebSocket("ws://localhost:9002");
-
-        socket.onopen = () => {
-            console.log(" WebSocket 연결 성공! (관리자 페이지)");
+            console.log(" WebSocket 연결 성공 (관리자 페이지)");
+            socket.send(JSON.stringify({ type: "connect", message: "관리자 WebSocket 연결됨" }));
         };
 
         socket.onmessage = (event) => {
+            console.log(" WebSocket 메시지 수신:", event.data);
             const data = JSON.parse(event.data);
-            console.log(" WebSocket 메시지 수신 (관리자 페이지):", data);
 
-            if (data.type === "orderUpdate") {
+            if (data.type === "new_customer" || data.type === "update_products") {
+                console.log(" 데이터 변경 감지! 다시 불러오기...");
+                fetchData(); // 고객/상품 데이터 최신화
+            } else if (data.type === "orderUpdate") {
                 console.log(` 주문 ${data.oid} 상태가 ${data.status}로 변경됨`);
-                fetchOrders();
-                fetchGuestOrders();
+                fetchData(); // 주문 데이터 최신화
             }
         };
 
-        return () => {
-            socket.close();
-        };
-    }, []);
-    
-    useEffect(() => {
-        axios.post("http://localhost:9001/admin/guests")
-            .then(res => setGuestsData(res.data))
-            .catch(err => console.log(err));
+        socket.onerror = (error) => console.error("ERROR WebSocket 오류:", error);
+        socket.onclose = () => console.warn(" WebSocket 연결 종료");
+
+        return () => socket.close();
     }, []);
 
-    useEffect(() => {
-        axios.post("http://localhost:9001/admin/products")
-            .then(res => setProductData(res.data))
-            .catch(err => console.log(err));
-    }, []);
-    useEffect(() => {
-        fetchOrders();
-        fetchGuestOrders();
-    }, []);
-
-    const fetchOrders = async () => {
-        try {
-            const response = await axios.post("http://localhost:9001/admin/orders");
-            setOrderData(response.data);
-        } catch (error) {
-            console.error("ERROR 회원 주문 조회 오류:", error);
-        }
-    };
-
-    const fetchGuestOrders = async () => {
-        try {
-            const response = await axios.post("http://localhost:9001/admin/ordersG");
-            setOrderGData(response.data);
-        } catch (error) {
-            console.error("ERROR 비회원 주문 조회 오류:", error);
-        }
-    };
-
-
-    const clickTab = (name) => {
-        if (category === name) {
-            setIsOpen(!isOpen);  // 같은 탭을 누르면 닫기
-        } else {
-            setCategory(name);
-            setIsOpen(true);  // 다른 탭을 누르면 항상 열기
-        }
-    };
-
-     //  주문 상태 변경 (Pending → Delivered)
-     const updateOrderStatus = async (oid, isGuest = false) => {
+    /**  주문 상태 업데이트 */
+    const updateOrderStatus = async (oid, isGuest = false) => {
         try {
             await axios.post("http://localhost:9001/admin/updateOrderStatus", { oid, status: "Delivered", isGuest });
             alert("주문 상태가 'Delivered'로 변경되었습니다.");
-
         } catch (error) {
             console.error("ERROR 주문 상태 업데이트 오류:", error);
-            alert("주문 상태 변경에 실패했습니다.");
+            alert("주문 상태 변경 실패");
         }
+    };
+
+    /**  카테고리 클릭 핸들러 */
+    const clickTab = (name) => {
+        setIsOpen(category === name ? !isOpen : true);
+        setCategory(name);
     };
     return (
         <div className='adminMain-container'>
