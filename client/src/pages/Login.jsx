@@ -20,10 +20,6 @@ export default function Login() {
   const [saveId, setSaveId] = useState(null);
 
   const token = localStorage.getItem("token");
-  // if (token) {
-  //   alert("잘못된 접근입니다.");
-  //   navigate("/");
-  // }
   useEffect(() => {
     if (token) {
       alert("잘못된 접근입니다.");
