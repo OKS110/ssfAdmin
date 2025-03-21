@@ -8,12 +8,8 @@ export const checkAdminLogin = async({id, pwd}) => { // 수정 필요 : 테이�
         where username = ? and password = ?
     `;
 
-    const values = [
-        id, pwd
-    ];
-
+    const values = [ id, pwd ];
     const [result] = await db.execute(sql, values);
-
     return result[0];
 }
 
@@ -69,7 +65,6 @@ export const getGuestsData = async() => {
     `;
 
     const [result] = await db.execute(sql);
-
     return result;
 }
 
