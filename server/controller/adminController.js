@@ -1,9 +1,6 @@
 import * as repository from '../repository/adminRepository.js';
 import { notifyOrderUpdate } from "../server.js";
 import jwt from 'jsonwebtoken';
-// import multer from 'multer';
-import fs from 'fs';
-import path from 'path';
 
 /** 관리자 페이지 로그인 - checkAdminLogin **/
 export const checkAdminLogin = async(req, res) => {
@@ -57,11 +54,9 @@ export const getOrdersGData = async(req, res) => {
 
 
 export const updateOrderStatus = async (req, res) => {
-    
-    console.log("[DEBUG] 요청 데이터:", req.body); // 🔍 요청 데이터 출력
 
     const { oid, status, isGuest } = req.body;
-
+    
     if (!oid || !status) {
         console.error("요청 데이터 누락:", { oid, status, isGuest });
         return res.status(400).json({ error: "주문 ID와 상태 값이 필요합니다." });

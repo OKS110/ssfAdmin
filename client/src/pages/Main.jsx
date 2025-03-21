@@ -7,8 +7,8 @@ export default function Main() {
     const [guestsData, setGuestsData] = useState([]);
     const [orderData, setOrderData] = useState([]);
     const [orderGData, setOrderGData] = useState([]);
-    const [category, setCategory] = useState('');
-    const [isOpen, setIsOpen] = useState(false);
+    const [category, setCategory] = useState('customers');
+    const [isOpen, setIsOpen] = useState(true);
 
     /**  API 호출을 한 번에 처리하는 함수 */
     const fetchData = async () => {
@@ -48,7 +48,7 @@ export default function Main() {
 
             if (data.type === "new_customer" || data.type === "update_products") {
                 console.log(" 데이터 변경 감지! 다시 불러오기...");
-                fetchData(); // 고객/상품 데이터 최신화
+                fetchData(); // 고객 / 상품 데이터 최신화
             } else if (data.type === "orderUpdate") {
                 console.log(` 주문 ${data.oid} 상태가 ${data.status}로 변경됨`);
                 fetchData(); // 주문 데이터 최신화

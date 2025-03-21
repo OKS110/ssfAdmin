@@ -6,7 +6,7 @@ import { AuthContext } from '../auth/AuthContext.js';
 // 아이디 저장 체크박스 로직 추가하기
 
 export default function Login() {
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { setIsLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
   const initForm = { 'id': '', 'pwd': '' };
   const refs = {
@@ -15,11 +15,11 @@ export default function Login() {
   };
 
   const [formData, setFormData] = useState(initForm);
-  const [errMsg, setErrMsg] = useState(initForm);
   const [saveIdFlag, setSaveIdFlag] = useState(false);
   const [saveId, setSaveId] = useState(null);
 
   const token = localStorage.getItem("token");
+  
   useEffect(() => {
     if (token) {
       alert("잘못된 접근입니다.");
@@ -27,16 +27,10 @@ export default function Login() {
     }
   }, []);
 
-  /** onChane : 폼 데이터 관리 **/
+  /** onChange : 폼 데이터 관리 **/
   const handleChangeForm = (event) => {
     const {name, value} = event.target;
     setFormData({...formData, [name]: value});
-
-    if (name === 'id') {
-        value === '' ? setErrMsg({...errMsg, ['id']: '아이디를 입력해주세요'}) : setErrMsg({...errMsg, ['id']: ''});
-    } else if (name === 'pwd') {
-        value === '' ? setErrMsg({...errMsg, ['pwd']: '비밀번호를 입력해주세요'}) : setErrMsg({...errMsg, ['pwd']: ''});  
-    }
   }
 
   /** onSubmit : 버튼 클릭 이벤트 **/
@@ -52,7 +46,7 @@ export default function Login() {
     // 서버 전송
     axios.post('http://localhost:9001/admin/login', formData)
         .then(res => {
-          console.log('res.data --> ', res.data);
+          // console.log('res.data --> ', res.data);
           if (res.data.result_rows === 1) {
             alert('로그인 성공!');
             localStorage.setItem("token", res.data.token);
@@ -71,13 +65,11 @@ export default function Login() {
   /** validate : 유효성 체크 **/
   const validate = () => {
     if (refs.idRef.current.value === '') {
-      // alert('아이디를 입력해주세요.');
-      setErrMsg({...errMsg, ['id']: '아이디를 입력해주세요.'});
+      alert('아이디를 입력해주세요.');
       refs.idRef.current.focus();
       return false;
     } else if (refs.pwdRef.current.value === '') {
-      // alert('비밀번호를 입력해주세요.');
-      setErrMsg({...errMsg, ['pwd']: '비밀번호를 입력해주세요.'});
+      alert('비밀번호를 입력해주세요.');
       refs.pwdRef.current.focus();
       return false;
     }
@@ -93,11 +85,13 @@ export default function Login() {
   useEffect(() => {
     // 저장 활성화 버튼 여부 확인
     let idFlag = JSON.parse(localStorage.getItem("KEY_SAVE_ID_FLAG"));
+
     // 저장 여부x -> 현재 저장 여부 저장
     idFlag !== null && setSaveIdFlag(saveIdFlag);
 
     // 저장x -> false이면 빈값 저장
     idFlag === false && localStorage.setItem("user_id", "");
+
     // 로컬스토리지에서 id값 호출
     let data = localStorage.getItem("user_id");
 
@@ -134,9 +128,7 @@ export default function Login() {
                   <button type='submit' className='adminLogin-btn'>로그인</button>
               </div>
             </div>
-            { errMsg.id !== '' && <p className='adminLogin-form-errMsg'>{errMsg.id}</p> }
-            { errMsg.pwd !== '' && <p className='adminLogin-form-errMsg'>{errMsg.pwd}</p> }
-            {/* 폼 데이터 일치하지 않을 시 에러메시지 :: 아이디 또는 비밀번호가 일치하지 않습니다. */}
+
             <div className='adminLogin-form-content2'>
               <input type="checkbox" checked={saveIdFlag} onClick={handleRememberId} />아이디 저장
             </div>

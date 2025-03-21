@@ -33,8 +33,10 @@ export default function RegiProduct() {
 
         if (selectedCategory === "shoes") {
             setSizes([{ name: "", foot_length: "" }]); // 신발 사이즈 구조
+        }else if(selectedCategory === 'bottom'){
+            setSizes([{ name: "", waist_line: "", total_length: "" }]); // 하의 사이즈 구조
         } else {
-            setSizes([{ name: "", total_length: "", sleeve_length: "", shoulder_width: "" }]); // 의류 사이즈 구조
+            setSizes([{ name: "", total_length: "", sleeve_length: "", shoulder_width: "" }]); // 상의, 아우터 사이즈 구조
         }
     };
 
@@ -42,6 +44,8 @@ export default function RegiProduct() {
     const addSize = () => {
         if (category === "shoes") {
             setSizes([...sizes, { name: "", foot_length: "" }]);
+        }else if(category === 'bottom'){
+            setSizes([...sizes, { name: "", waist_line: "", total_length: "" }]);
         } else {
             setSizes([...sizes, { name: "", total_length: "", sleeve_length: "", shoulder_width: "" }]);
         }
@@ -54,9 +58,9 @@ export default function RegiProduct() {
 
     //  사이즈 변경 핸들러
     const handleSizeChange = (index, field, value) => {
-        const updatedSizes = [...sizes];
-        updatedSizes[index][field] = value;
-        setSizes(updatedSizes);
+        const updatedSizes = [...sizes]; // 기존 사이즈 배열을 복사
+        updatedSizes[index][field] = value; // 해당 인덱스의 필드 값을 새로 입력한 값으로 수정
+        setSizes(updatedSizes);  // 수정된 배열을 상태로 반영
     };
 
     //  파일 선택 핸들러
@@ -89,7 +93,7 @@ export default function RegiProduct() {
         formData.append("category", category);
         formData.append("sub_category", subCategory);
         formData.append("name", pname);
-        formData.append("color", JSON.stringify(color.split(",").map(c => c.trim())));
+        formData.append("color", JSON.stringify(color.split(",").map(c => c.trim()))); //색상은 "red, blue" 식으로 입력된 문자열을 ["red", "blue"] 배열로 만든 후 JSON 문자열로 변환해서 저장
         formData.append("size", JSON.stringify(sizes));
         formData.append("star", star || "0.0");
         formData.append("stock", stock || "0");
@@ -101,11 +105,12 @@ export default function RegiProduct() {
         formData.append("description", description || "상품 설명 없음");
 
         //  파일 추가
-        selectedFiles.forEach((file) => formData.append("files", file));
+        selectedFiles.forEach((file) => formData.append("files", file)); //여러 파일을 files 라는 key로 반복 추가
+        //왜 forEach인가?
 
         try {
             const response = await axios.post("http://localhost:9001/upload/multiple", formData, {
-                headers: { "Content-Type": "multipart/form-data" }
+                headers: { "Content-Type": "multipart/form-data" } //Content-Type을 반드시 "multipart/form-data"로 지정 - 이건 왜??
             });
 
             console.log(" 업로드 완료:", response.data);
@@ -156,34 +161,52 @@ export default function RegiProduct() {
                                     onChange={(e) => handleSizeChange(index, "name", e.target.value)}
                                 />
                                 {category === "shoes" ? (
-                                    <Form.Control
-                                        type="number"
-                                        placeholder="발 길이 (mm)"
-                                        value={size.foot_length}
-                                        onChange={(e) => handleSizeChange(index, "foot_length", e.target.value)}
-                                    />
-                                ) : (
-                                    <>
+                                        // 신발 사이즈 입력
                                         <Form.Control
                                             type="number"
-                                            placeholder="총장"
-                                            value={size.total_length}
-                                            onChange={(e) => handleSizeChange(index, "total_length", e.target.value)}
+                                            placeholder="발 길이 (mm)"
+                                            value={size.foot_length}
+                                            onChange={(e) => handleSizeChange(index, "foot_length", e.target.value)}
                                         />
-                                        <Form.Control
-                                            type="number"
-                                            placeholder="소매 길이"
-                                            value={size.sleeve_length}
-                                            onChange={(e) => handleSizeChange(index, "sleeve_length", e.target.value)}
-                                        />
-                                        <Form.Control
-                                            type="number"
-                                            placeholder="어깨 너비"
-                                            value={size.shoulder_width}
-                                            onChange={(e) => handleSizeChange(index, "shoulder_width", e.target.value)}
-                                        />
-                                    </>
-                                )}
+                                    ) : category === "bottom" ? (
+                                        // 하의 사이즈 입력
+                                        <>
+                                            <Form.Control
+                                                type="number"
+                                                placeholder="허리 단면 (waist line)"
+                                                value={size.waist_line}
+                                                onChange={(e) => handleSizeChange(index, "waist_line", e.target.value)}
+                                            />
+                                            <Form.Control
+                                                type="number"
+                                                placeholder="총장 (total length)"
+                                                value={size.total_length}
+                                                onChange={(e) => handleSizeChange(index, "total_length", e.target.value)}
+                                            />
+                                        </>
+                                    ) : (
+                                        // 상의/아우터 사이즈 입력
+                                        <>
+                                            <Form.Control
+                                                type="number"
+                                                placeholder="총장 (total length)"
+                                                value={size.total_length}
+                                                onChange={(e) => handleSizeChange(index, "total_length", e.target.value)}
+                                            />
+                                            <Form.Control
+                                                type="number"
+                                                placeholder="소매 길이 (sleeve length)"
+                                                value={size.sleeve_length}
+                                                onChange={(e) => handleSizeChange(index, "sleeve_length", e.target.value)}
+                                            />
+                                            <Form.Control
+                                                type="number"
+                                                placeholder="어깨 너비 (shoulder width)"
+                                                value={size.shoulder_width}
+                                                onChange={(e) => handleSizeChange(index, "shoulder_width", e.target.value)}
+                                            />
+                                        </>
+                                    )}
                                 <Button variant="danger" onClick={() => removeSize(index)}>삭제</Button>
                             </div>
                         ))}

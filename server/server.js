@@ -12,7 +12,6 @@ const port = 9001;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 server.use(cors({
     origin: ['http://localhost:3000', 'http://localhost:3001'], // 고객 & 관리자 페이지
     credentials: true

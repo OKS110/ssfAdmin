@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'url';
-import multer from 'multer';
+import multer from 'multer'; //multer로 파일 받기
 import fs from 'fs';
 import path from 'path';
 import { notifyCustomerUpdate } from '../server.js'; //  WebSocket 알림 함수 가져오기
@@ -10,26 +10,27 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // 업로드 폴더 설정
-const uploadDir = path.join(__dirname, 'upload_files');
+const uploadDir = path.join(__dirname, 'upload_files'); 
 console.log(" 업로드 폴더 경로: ", uploadDir);
 
 // Multer 설정
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const uploadPath = path.join(__dirname, '..', 'upload_files'); // 🔹 루트 폴더에 업로드 경로 지정
+        const uploadPath = path.join(__dirname, '..', 'upload_files'); // 루트 폴더에 업로드 경로 지정 - 저장할 경로
 
         if (!fs.existsSync(uploadPath)) {
             fs.mkdirSync(uploadPath, { recursive: true });
         }
 
-        cb(null, uploadPath);
+        cb(null, uploadPath); // 저장 위치 지정
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, uniqueSuffix + '_' + file.originalname);
+        cb(null, uniqueSuffix + '_' + file.originalname);  // 파일명 지정
     }
 });
 
+// multer 미들웨어 설정
 const upload = multer({
     storage: storage,
     limits: { fileSize: 10 * 1024 * 1024 } // 파일 크기 10MB 제한
@@ -56,14 +57,14 @@ export const fileUploadMultiple = (req, res) => {
 
         //  요청 데이터 추출
         const { category, sub_category, name, color, size, original_price, star, stock, discount_rate, discounted_price, brand, delivery_fee, description } = req.body;
-        console.log("요청 데이터:", req.body);
+        // console.log("요청 데이터:", req.body);
 
         if (!category || !sub_category || !name || !color || !size || !original_price) {
             return res.status(400).json({ message: "필수 입력 값이 누락되었습니다." });
         }
 
         try {
-            //  color JSON 변환 (오류 방지)
+            //  color JSON 변환 (오류 방지) "["red", "blue"]" 같은 JSON 형식으로 넘어온 데이터를 colorArray 배열로 변환
             let colorArray;
             try {
                 colorArray = JSON.parse(color);
@@ -75,16 +76,22 @@ export const fileUploadMultiple = (req, res) => {
             let sizeArray;
             try {
                 sizeArray = JSON.parse(size);
-
-                //  대분류(category)에 따라 사이즈 데이터 가공
+            
                 if (category === "shoes") {
-                    // 신발: `{ name: "230", foot_length: 230 }`
+                    //  신발
                     sizeArray = sizeArray.map(item => ({
                         name: item.name || "",
                         foot_length: item.foot_length ? parseInt(item.foot_length, 10) : null
                     }));
+                } else if (category === "bottom") {
+                    //  하의
+                    sizeArray = sizeArray.map(item => ({
+                        name: item.name || "",
+                        waist_line: item.waist_line ? parseInt(item.waist_line, 10) : null,
+                        total_length: item.total_length ? parseInt(item.total_length, 10) : null
+                    }));
                 } else {
-                    // 의류 (상의, 하의, 아우터): `{ name: "S", total_length: 78, sleeve_length: 62, shoulder_width: 44 }`
+                    //  상의, 아우터
                     sizeArray = sizeArray.map(item => ({
                         name: item.name || "",
                         total_length: item.total_length ? parseInt(item.total_length, 10) : null,
@@ -93,16 +100,17 @@ export const fileUploadMultiple = (req, res) => {
                     }));
                 }
             } catch (e) {
-                sizeArray = []; // JSON 파싱 오류 시 기본값 설정
+                sizeArray = [];
             }
 
             //  업로드된 파일 정보 저장
             let uploadFileName = [];
             for (const file of req.files) {
                 uploadFileName.push(`http://localhost:9001/uploads/${file.filename}`);
+                // 클라이언트에서 이미지를 표시할 때 사용할 URL을 미리 만들어줌 (ex: "http://localhost:9001/uploads/image1.jpg")
             }
 
-            console.log(" 업로드된 파일 경로:", uploadFileName);
+            // console.log(" 업로드된 파일 경로:", uploadFileName);
 
             //  상품 정보 DB 저장
             const insertQuery = `
