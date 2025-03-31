@@ -101,29 +101,32 @@ WebSocket을 활용해 상품 등록, 회원 생성, 배송 상태 등의 정보
 
 ## 🎥 시연 영상
 
-
-# 공유링크
+# GOOGLE DRIVE 공유링크
+회원가입_로그인
+https://drive.google.com/file/d/1u7-OwWLftwjyRwI5lpdjYSntahe4kiZT
+회원로그인_장바구니_구매
+https://drive.google.com/file/d/1G9ahhl5kzHjxR46U6HoHWYf6_IPCHH-j
+바로구매_리뷰_상세페이지
+https://drive.google.com/file/d/1lVuK3kx2Hb4ooWwEmXQ3j-H_tPuIBwwa
+검색
+https://drive.google.com/file/d/1SD_qXeHbSqsrJtDQL3VZqrZvKrcjeGhf
+비회원구매
+https://drive.google.com/file/d/13mrpZra_-GHzdZiIiOmNp58I5jerFrvH
 상품업데이트
 https://drive.google.com/file/d/1UqqxsecD5XKa0JAc90YppDczea5ndnqc
 
 
-비회원구매
-https://drive.google.com/file/d/13mrpZra_-GHzdZiIiOmNp58I5jerFrvH
-
-검색
-https://drive.google.com/file/d/1SD_qXeHbSqsrJtDQL3VZqrZvKrcjeGhf
-
-바로구매_리뷰_상세페이지
-https://drive.google.com/file/d/1lVuK3kx2Hb4ooWwEmXQ3j-H_tPuIBwwa
-
-회원로그인_장바구니_구매
-https://drive.google.com/file/d/1G9ahhl5kzHjxR46U6HoHWYf6_IPCHH-j
-
-회원가입_로그인
-https://drive.google.com/file/d/1u7-OwWLftwjyRwI5lpdjYSntahe4kiZT
-
-
 ## 🎥 프로젝트 시연 영상
+
+[![회원가입_로그인](https://img.youtube.com/vi/0yn8tjTnUgE/0.jpg)](https://youtu.be/0yn8tjTnUgE)
+
+[![회원로그인_장바구니_구매](https://img.youtube.com/vi/-pn6iaqh-N0/0.jpg)](https://youtu.be/-pn6iaqh-N0)
+
+[![바로구매_리뷰_상품상세페이지](https://img.youtube.com/vi/IQORc-w5BfY/0.jpg)](https://youtu.be/IQORc-w5BfY)
+
+[![검색](https://img.youtube.com/vi/YsOE5wedhVI/0.jpg)](https://youtu.be/YsOE5wedhVI)
+
+[![비회원구매](https://img.youtube.com/vi/E7vRAQ-BUXY/0.jpg)](https://youtu.be/E7vRAQ-BUXY)
 
 [![상품업데이트](https://img.youtube.com/vi/jHye2_Z2KgQ/0.jpg)](https://youtu.be/jHye2_Z2KgQ)
 
