@@ -94,9 +94,15 @@ WebSocket을 활용해 상품 등록, 회원 생성, 배송 상태 등의 정보
 ![product_update](./assets/product_update.png)
 
 ---
+## http://ssf-client.s3-website.ap-northeast-2.amazonaws.com/ 고객페이지 배포 주소
+## http://ssf-admin-client.s3-website.ap-northeast-2.amazonaws.com/ 관리자 페이지 배포 주소
+
+관리자 -> 고객페이지 순으로 열어야 함.
 
 ## 🚀 실행 방법
 
 ```bash
 npm install
 npm start
+
+
