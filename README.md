@@ -94,10 +94,6 @@ WebSocket을 활용해 상품 등록, 회원 생성, 배송 상태 등의 정보
 ![product_update](./assets/product_update.png)
 
 ---
-### http://ssf-client.s3-website.ap-northeast-2.amazonaws.com/ 고객페이지 배포 주소
-### http://ssf-admin-client.s3-website.ap-northeast-2.amazonaws.com/ 관리자 페이지 배포 주소
-
-관리자 -> 고객페이지 순으로 열어야 함.
 
 ## 🎥 프로젝트 시연 영상
 고객페이지와 관리자 페이지의 웹소켓을 이용한 상호작용을 보여주기 위해 동영상을 짧게 생성하여 여러개로 구분지었습니다.
@@ -123,8 +119,18 @@ WebSocket을 활용해 상품 등록, 회원 생성, 배송 상태 등의 정보
 ## 🚀 실행 방법
 
 ```bash
+cd client
 npm install
 npm start
+
+cd server
+node server.js
+
+✅ 배포 링크
+고객 페이지: http://ssf-client.s3-website.ap-northeast-2.amazonaws.com/
+관리자 페이지: http://ssf-admin-client.s3-website.ap-northeast-2.amazonaws.com/
+
+반드시 관리자 -> 고객페이지 순으로 열어주세요.
 --
 
 
