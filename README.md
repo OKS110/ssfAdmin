@@ -22,13 +22,23 @@ WebSocket을 활용해 상품 등록, 회원 생성, 배송 상태 등의 정보
 ---
 
 ## ✒️ 프로젝트 목표
-
+ 
 1. 관리자 페이지의 전반적인 기능 흐름 이해 및 구현  
 2. 실시간 데이터 관리 (상품 등록, 배송 상태, 회원 정보 등) 구현  
 3. WebSocket을 활용한 양방향 데이터 처리 경험  
 4. 상품 및 주문 관리 UI를 효율적으로 구성하고 API 통신 연동
 
 ---
+
+## **🗂️ 전체 구조도**
+
+![구조도](./assets/admin_relationship.png)
+
+
+## 📋 ERD
+
+![ERD](./assets/erd.png)
+
 
 ## 📌 주요 기능
 
@@ -137,6 +147,19 @@ node server.js
 관리자 페이지: http://ssf-admin-client.s3-website.ap-northeast-2.amazonaws.com/
 
 반드시 관리자 -> 고객페이지 순으로 열어주세요.
+
+회원(대표 실험 회원)
+ID : zaqzaq123
+PWD : zaqzaqzaq123
+
+관리자
+ID : superadmin
+PWD : superadmin123
+
+비회원
+- 로그인하지 않고 상품 구매 시 휴대폰 인증 후에 비회원 생성. 
+- 구매 시 주문번호 생성
+- 비회원 로그인 시 이름, 휴대폰 번호, 주문번호로 주문상태 확인 가능
 --
 
 
