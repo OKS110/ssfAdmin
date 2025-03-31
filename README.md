@@ -146,17 +146,17 @@ node server.js
 고객 페이지: http://ssf-client.s3-website.ap-northeast-2.amazonaws.com/
 관리자 페이지: http://ssf-admin-client.s3-website.ap-northeast-2.amazonaws.com/
 
-반드시 관리자 -> 고객페이지 순으로 열어주세요.
+반드시 관리자 -> 고객페이지 순으로 열어주세요!!!!
 
-회원(대표 실험 회원)
+✅ 회원 (대표 실험 회원)
 ID : zaqzaq123
 PWD : zaqzaqzaq123
 
-관리자
+✅ 관리자
 ID : superadmin
 PWD : superadmin123
 
-비회원
+✅ 비회원
 - 로그인하지 않고 상품 구매 시 휴대폰 인증 후에 비회원 생성. 
 - 구매 시 주문번호 생성
 - 비회원 로그인 시 이름, 휴대폰 번호, 주문번호로 주문상태 확인 가능
