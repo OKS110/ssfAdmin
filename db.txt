@@ -1,0 +1,205 @@
+-- 데이터베이스 설정
+SHOW DATABASES;
+-- CREATE DATABASE shopping_mall;
+USE shopping_mall;
+-- DROP DATABASE shopping_mall;
+SHOW TABLES;
+
+-- 관리자 테이블
+CREATE TABLE admins (
+    aid INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('super_admin', 'product_manager') NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 관리자 데이터 삽입
+INSERT INTO admins (username, email, password, role, is_active) VALUES
+('superadmin', 'superadmin@google.com', 'superadmin123', 'super_admin', TRUE),
+('manager1', 'manager1@naver.com', 'manager1123', 'product_manager', TRUE),
+('manager2', 'manager2@daum.com', 'manager2123', 'product_manager', TRUE);
+select * from admins;
+-- 관리자 권한 테이블
+CREATE TABLE admin_permissions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    admin_id INT NOT NULL,
+    permission ENUM('manage_customers', 'manage_orders', 'manage_products') NOT NULL,
+    FOREIGN KEY (admin_id) REFERENCES admins(aid) ON DELETE CASCADE
+);
+
+-- super_admin은 모든 권한 보유
+INSERT INTO admin_permissions (admin_id, permission) VALUES
+(1, 'manage_customers'), (1, 'manage_orders'), (1, 'manage_products'),
+(2, 'manage_products'), (3, 'manage_products');
+
+-- 고객 테이블
+CREATE TABLE customers (
+    customer_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL DEFAULT '',
+    detail_address VARCHAR(250) NOT NULL DEFAULT '',
+    zipcode VARCHAR(20) NOT NULL,
+    additional_address VARCHAR(255) DEFAULT NULL,
+    birth_date DATE,
+    status JSON DEFAULT NULL,
+    gender JSON DEFAULT NULL,
+    membership_level ENUM('Bronze', 'Silver', 'Gold', 'Platinum') DEFAULT 'Bronze',
+    loyalty_points INT DEFAULT 0,
+    last_login DATETIME,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+select * from customers;
+-- 비회원 테이블
+CREATE TABLE guests (
+    gid INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    email VARCHAR(100) DEFAULT NULL,
+    address VARCHAR(255) DEFAULT NULL,
+    detail_address VARCHAR(255) DEFAULT NULL,
+    zipcode VARCHAR(20) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_guest UNIQUE (name, email, phone)
+);
+
+-- 상품 테이블
+CREATE TABLE products (
+    pid INT AUTO_INCREMENT PRIMARY KEY,
+    category VARCHAR(50),
+    sub_category VARCHAR(50),
+    name VARCHAR(255),
+    brand VARCHAR(100),
+    color JSON DEFAULT NULL,
+    size JSON DEFAULT NULL,
+    image JSON DEFAULT NULL,
+    description VARCHAR(255) NULL,
+    likes INT DEFAULT 0,
+    cart_count INT DEFAULT 0,
+    star DECIMAL(2,1) CHECK (star >= 0 AND star <= 5),
+    stock INT NOT NULL DEFAULT 0,
+    original_price INT NOT NULL,
+    discount_rate INT DEFAULT 0,
+    discounted_price DECIMAL(10,2) NOT NULL DEFAULT 0,
+    delivery_fee VARCHAR(50) NOT NULL DEFAULT 'free',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+-- 장바구니 테이블
+CREATE TABLE cart (
+    cid INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    size VARCHAR(10) NOT NULL,
+    color VARCHAR(20) NOT NULL,
+    total_price INT NOT NULL DEFAULT 0,
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(pid) ON DELETE CASCADE
+);
+
+-- 주문 테이블
+CREATE TABLE orders (
+    oid INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    order_number VARCHAR(50) UNIQUE NOT NULL,
+    brand VARCHAR(50),
+    title VARCHAR(50) NOT NULL,
+    total_price INT NOT NULL,
+    quantity INT NOT NULL,
+    size VARCHAR(50) NOT NULL,
+    color VARCHAR(50) NOT NULL,
+    zipcode VARCHAR(20) NOT NULL,
+    shipping_address VARCHAR(255) NOT NULL DEFAULT '',
+    detail_address VARCHAR(255) NOT NULL,
+    delivery_message VARCHAR(255) NULL,
+    status ENUM('Pending', 'Approved', 'Rejected', 'Shipped', 'Delivered', 'Reviewed') DEFAULT 'Pending',
+    refund_amount INT DEFAULT 0,
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    payment_method VARCHAR(50) NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE
+);
+
+-- 비회원 주문 테이블
+CREATE TABLE guest_orders (
+    g_oid INT AUTO_INCREMENT PRIMARY KEY,
+    guest_id INT NOT NULL,
+    order_number VARCHAR(50) UNIQUE NOT NULL,
+    brand VARCHAR(50),
+    title VARCHAR(50) NOT NULL,
+    total_price INT NOT NULL,
+    quantity INT NOT NULL,
+    size VARCHAR(50) NOT NULL,
+    color VARCHAR(50) NOT NULL,
+    zipcode VARCHAR(20) NOT NULL,
+    shipping_address VARCHAR(255) NOT NULL DEFAULT '',
+    detail_address VARCHAR(255) NOT NULL,
+    delivery_message VARCHAR(255) NULL,
+    status ENUM('Pending', 'Shipped', 'Delivered', 'Cancelled', 'Returned') DEFAULT 'Pending',
+    refund_amount INT DEFAULT 0,
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    payment_method VARCHAR(50) NOT NULL,
+    FOREIGN KEY (guest_id) REFERENCES guests(gid) ON DELETE CASCADE
+);
+
+-- 주문 상세 테이블
+CREATE TABLE order_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price INT NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(oid) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(pid) ON DELETE CASCADE
+);
+
+-- 리뷰 테이블
+CREATE TABLE reviews (
+    rid INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    product_id INT NOT NULL,
+    order_id INT NOT NULL,
+    rating DECIMAL(2,1) CHECK (rating >= 0 AND rating <= 5),
+    review_text TEXT DEFAULT NULL,
+    status ENUM('Pending', 'Approved', 'Rejected', 'Shipped', 'Delivered', 'Reviewed') DEFAULT 'Pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(pid) ON DELETE CASCADE,
+    FOREIGN KEY (order_id) REFERENCES orders(oid) ON DELETE CASCADE
+);
+
+-- 관리자 승인 요청 테이블
+CREATE TABLE admin_approval (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    request_type ENUM('Cancel', 'Return', 'Exchange', 'Refund') NOT NULL,
+    order_id INT NOT NULL,
+    customer_id INT NOT NULL,
+    status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
+    reason VARCHAR(255) DEFAULT NULL,
+    admin_id INT NOT NULL,
+    decision_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders(oid) ON DELETE CASCADE,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE,
+    FOREIGN KEY (admin_id) REFERENCES admins(aid) ON DELETE CASCADE
+);
+
+select * from admins;
+select * from customers; 
+select * from guests;
+select * from guest_orders;
+select * from cart;
+select * from orders;
+select * from reviews;
+select * from products;
+use shopping_mall;
+show databases;
