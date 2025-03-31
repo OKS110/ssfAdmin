@@ -90,6 +90,9 @@ WebSocket을 활용해 상품 등록, 회원 생성, 배송 상태 등의 정보
 ### 📋 주문 및 배송 관리
 ![orders](./assets/orderList.png)
 
+### 📋 상품 등록
+![product_update](./assets/product_update.png)
+
 ---
 
 ## 🚀 실행 방법
