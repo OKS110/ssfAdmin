@@ -94,7 +94,13 @@ WebSocket을 활용해 상품 등록, 회원 생성, 배송 상태 등의 정보
 ![product_update](./assets/product_update.png)
 
 ---
+## 프로젝트 배포 주소
+#### http://ssf-client.s3-website.ap-northeast-2.amazonaws.com/ 고객페이지 배포 주소
+#### http://ssf-admin-client.s3-website.ap-northeast-2.amazonaws.com/ 관리자 페이지 배포 주소
 
+관리자 -> 고객페이지 순으로 열어야 합니다.
+
+---
 ## 🎥 프로젝트 시연 영상
 고객페이지와 관리자 페이지의 웹소켓을 이용한 상호작용을 보여주기 위해 동영상을 짧게 생성하여 여러개로 구분지었습니다.
 
