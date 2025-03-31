@@ -94,12 +94,13 @@ WebSocket을 활용해 상품 등록, 회원 생성, 배송 상태 등의 정보
 ![product_update](./assets/product_update.png)
 
 ---
-## http://ssf-client.s3-website.ap-northeast-2.amazonaws.com/ 고객페이지 배포 주소
-## http://ssf-admin-client.s3-website.ap-northeast-2.amazonaws.com/ 관리자 페이지 배포 주소
+### http://ssf-client.s3-website.ap-northeast-2.amazonaws.com/ 고객페이지 배포 주소
+### http://ssf-admin-client.s3-website.ap-northeast-2.amazonaws.com/ 관리자 페이지 배포 주소
 
 관리자 -> 고객페이지 순으로 열어야 함.
 
 ## 🎥 프로젝트 시연 영상
+고객페이지와 관리자 페이지의 웹소켓을 이용한 상호작용을 보여주기 위해 동영상을 짧게 생성하여 여러개로 구분지었습니다.
 
 ### 회원가입_로그인
 [![회원가입_로그인](https://img.youtube.com/vi/0yn8tjTnUgE/0.jpg)](https://youtu.be/0yn8tjTnUgE)
@@ -118,21 +119,6 @@ WebSocket을 활용해 상품 등록, 회원 생성, 배송 상태 등의 정보
 
 ### 상품업데이트
 [![상품업데이트](https://img.youtube.com/vi/jHye2_Z2KgQ/0.jpg)](https://youtu.be/jHye2_Z2KgQ)
-
-# GOOGLE DRIVE 영상 공유링크
-### 회원가입_로그인
-https://drive.google.com/file/d/1u7-OwWLftwjyRwI5lpdjYSntahe4kiZT
-### 회원로그인_장바구니_구매
-https://drive.google.com/file/d/1G9ahhl5kzHjxR46U6HoHWYf6_IPCHH-j
-### 바로구매_리뷰_상세페이지
-https://drive.google.com/file/d/1lVuK3kx2Hb4ooWwEmXQ3j-H_tPuIBwwa
-### 검색
-https://drive.google.com/file/d/1SD_qXeHbSqsrJtDQL3VZqrZvKrcjeGhf
-### 비회원구매
-https://drive.google.com/file/d/13mrpZra_-GHzdZiIiOmNp58I5jerFrvH
-### 상품업데이트
-https://drive.google.com/file/d/1UqqxsecD5XKa0JAc90YppDczea5ndnqc
-
 
 ## 🚀 실행 방법
 
