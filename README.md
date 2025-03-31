@@ -99,10 +99,40 @@ WebSocket을 활용해 상품 등록, 회원 생성, 배송 상태 등의 정보
 
 관리자 -> 고객페이지 순으로 열어야 함.
 
+## 🎥 시연 영상
+
+
+# 공유링크
+상품업데이트
+https://drive.google.com/file/d/1UqqxsecD5XKa0JAc90YppDczea5ndnqc
+
+
+비회원구매
+https://drive.google.com/file/d/13mrpZra_-GHzdZiIiOmNp58I5jerFrvH
+
+검색
+https://drive.google.com/file/d/1SD_qXeHbSqsrJtDQL3VZqrZvKrcjeGhf
+
+바로구매_리뷰_상세페이지
+https://drive.google.com/file/d/1lVuK3kx2Hb4ooWwEmXQ3j-H_tPuIBwwa
+
+회원로그인_장바구니_구매
+https://drive.google.com/file/d/1G9ahhl5kzHjxR46U6HoHWYf6_IPCHH-j
+
+회원가입_로그인
+https://drive.google.com/file/d/1u7-OwWLftwjyRwI5lpdjYSntahe4kiZT
+
+
+## 🎥 프로젝트 시연 영상
+
+[![상품업데이트](https://img.youtube.com/vi/jHye2_Z2KgQ/0.jpg)](https://youtu.be/jHye2_Z2KgQ)
+
 ## 🚀 실행 방법
 
 ```bash
 npm install
 npm start
+--
+
 
 
