@@ -16,7 +16,6 @@ export default function Login() {
 
   const [formData, setFormData] = useState(initForm);
   const [saveIdFlag, setSaveIdFlag] = useState(false);
-  const [saveId, setSaveId] = useState(null);
 
   const token = localStorage.getItem("token");
   
@@ -27,6 +26,16 @@ export default function Login() {
     }
   }, []);
 
+  useEffect(() => {
+    const idFlag = JSON.parse(localStorage.getItem("KEY_SAVE_ID_FLAG"));
+    const savedId = localStorage.getItem("user_id");
+  
+    if (idFlag !== null) setSaveIdFlag(idFlag);
+    if (savedId) {
+      setFormData(prev => ({ ...prev, id: savedId }));
+    }
+  }, []);
+  
   /** onChange : 폼 데이터 관리 **/
   const handleChangeForm = (event) => {
     const {name, value} = event.target;
@@ -77,27 +86,18 @@ export default function Login() {
   }
 
   // 아이디 저장 체크박스 활성화 이벤트
-  const handleRememberId = () => {
-    localStorage.setItem("KEY_SAVE_ID_FLAG", !saveIdFlag);
-    setSaveIdFlag(!saveIdFlag);
+  const handleRememberId = (event) => {
+    const checked = event.target.checked; //true, false
+    setSaveIdFlag(checked);
+
+    if (!checked) {
+        localStorage.removeItem("user_id"); // 체크 해제하면 저장된 아이디 삭제
+        localStorage.removeItem("KEY_SAVE_ID_FLAG");
+    }else{
+      localStorage.setItem("KEY_SAVE_ID_FLAG", checked);
+    }
   }
 
-  useEffect(() => {
-    // 저장 활성화 버튼 여부 확인
-    let idFlag = JSON.parse(localStorage.getItem("KEY_SAVE_ID_FLAG"));
-
-    // 저장 여부x -> 현재 저장 여부 저장
-    idFlag !== null && setSaveIdFlag(saveIdFlag);
-
-    // 저장x -> false이면 빈값 저장
-    idFlag === false && localStorage.setItem("user_id", "");
-
-    // 로컬스토리지에서 id값 호출
-    let data = localStorage.getItem("user_id");
-
-    // 저장o
-    data !== null && setSaveId(data);
-  });
 
   return(
     <div className='adminLogin-container'>
@@ -113,7 +113,7 @@ export default function Login() {
                         ref={refs.idRef}
                         onChange={handleChangeForm} 
                         placeholder='아이디'
-                        defaultValue={saveId}
+                        value={formData.id}
                         />
                 </li>
                 <li>
